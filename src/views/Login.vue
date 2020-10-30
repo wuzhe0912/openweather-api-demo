@@ -29,6 +29,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import firebase from '@/firebase'
 
 export default {
   name: 'Login',
@@ -46,9 +47,11 @@ export default {
 
   data: () => ({
     list: [
-      { code: 'google', icon: 'mdi-google', name: '使用 Google 登入' },
-      { code: 'twitter', icon: 'mdi-twitter', name: '使用 twitter 登入' }
-    ]
+      { code: 'google', icon: 'mdi-google', name: 'Google 登入' },
+      { code: 'github', icon: 'mdi-github', name: 'GitHub 登入' },
+      { code: 'twitter', icon: 'mdi-twitter', name: 'twitter 登入' }
+    ],
+    usersRef: firebase.database().ref('users')
   }),
 
   methods: {
@@ -58,10 +61,18 @@ export default {
 
     checkLogin () {
       if (this.isLogin) {
+        this.saveUserToUsersRef(this.userProfile)
         this.$router.push({ name: 'channel' })
       } else {
         console.log('login fail')
       }
+    },
+
+    saveUserToUsersRef (user) {
+      return this.usersRef.child(user.uid).set({
+        name: user.name,
+        avatar: user.picture
+      })
     }
   }
 }
@@ -78,14 +89,10 @@ export default {
   }
   .login__list {
     margin-top: 12px;
-    width: 200px;
 
     span {
       width: 140px;
-      text-align: left;
-    }
-    .v-icon {
-      margin-right: 8px;
+      text-align: right;
     }
   }
 </style>

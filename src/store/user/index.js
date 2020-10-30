@@ -14,6 +14,7 @@ const mutations = {
   USER_DETAILS (state, userProfile) {
     state.isLogin = true
     state.userProfile = {
+      uid: userProfile.uid,
       name: userProfile.displayName,
       picture: userProfile.photoURL
     }
@@ -40,6 +41,15 @@ const actions = {
       }
       case 'twitter': {
         const provider = new firebase.auth.TwitterAuthProvider()
+        try {
+          await firebase.auth().signInWithPopup(provider)
+        } catch (error) {
+          console.log(error)
+        }
+        break
+      }
+      case 'github': {
+        const provider = new firebase.auth.GithubAuthProvider()
         try {
           await firebase.auth().signInWithPopup(provider)
         } catch (error) {
