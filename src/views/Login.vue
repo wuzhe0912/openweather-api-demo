@@ -3,7 +3,7 @@
     v-app-bar.login__bar(app dark color="primary")
       span.bar__title Vue Channel
     v-main
-      v-container
+      v-container(v-if="isLogin === false")
         .row.justify-center.ma-12
           v-img(
             alt="Vuetify Logo"
@@ -21,13 +21,28 @@
           )
             v-icon {{ item.icon }}
             span {{ item.name }}
+      v-container(v-else)
+        .row.justify-center.ma-12
+          div Welcome {{ userProfile.name }}
+          v-btn.login__list(@click="checkLogin" color="primary") 返回 Channel
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'Login',
+
+  computed: {
+    ...mapGetters('user', {
+      userProfile: 'userProfile',
+      isLogin: 'isLogin'
+    })
+  },
+
+  watch: {
+    isLogin: 'checkLogin'
+  },
 
   data: () => ({
     list: [
@@ -39,7 +54,15 @@ export default {
   methods: {
     ...mapActions('user', {
       login: 'login'
-    })
+    }),
+
+    checkLogin () {
+      if (this.isLogin) {
+        this.$router.push({ name: 'Channel' })
+      } else {
+        console.log('login fail')
+      }
+    }
   }
 }
 </script>

@@ -32,9 +32,7 @@ const actions = {
       case 'google': {
         const provider = new firebase.auth.GoogleAuthProvider()
         try {
-          await firebase.auth().signInWithPopup(provider).then((res) => {
-            console.log(2, res)
-          })
+          await firebase.auth().signInWithPopup(provider)
         } catch (error) {
           console.log(error)
         }

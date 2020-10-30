@@ -16,12 +16,24 @@ export default {
     })
   },
 
+  watch: {
+    isLogin: 'checkLogin'
+  },
+
   data: () => ({}),
 
   methods: {
     ...mapActions('user', {
       logout: 'logout'
-    })
+    }),
+
+    checkLogin () {
+      if (!this.isLogin) {
+        this.$router.push({ name: 'Login' })
+      } else {
+        console.log('logout fail')
+      }
+    }
   }
 }
 </script>
