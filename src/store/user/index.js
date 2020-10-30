@@ -39,7 +39,12 @@ const actions = {
         break
       }
       case 'twitter': {
-        console.log('login with twitter')
+        const provider = new firebase.auth.TwitterAuthProvider()
+        try {
+          await firebase.auth().signInWithPopup(provider)
+        } catch (error) {
+          console.log(error)
+        }
         break
       }
       default:
