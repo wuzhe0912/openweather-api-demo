@@ -58,7 +58,7 @@ export default {
 
     checkLogin () {
       if (this.isLogin) {
-        this.$router.push({ name: 'Channel' })
+        this.$router.push({ name: 'channel' })
       } else {
         console.log('login fail')
       }

@@ -29,7 +29,7 @@ export default {
 
     checkLogin () {
       if (!this.isLogin) {
-        this.$router.push({ name: 'Login' })
+        this.$router.push({ name: 'login' })
       } else {
         console.log('logout fail')
       }
