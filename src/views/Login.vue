@@ -71,7 +71,7 @@ export default {
     saveUserToUsersRef (user) {
       return this.usersRef.child(user.uid).set({
         name: user.name,
-        avatar: user.picture
+        avatar: user.avatar
       })
     }
   }

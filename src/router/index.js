@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import { routes } from './map'
-import firebase from '@/firebase'
+// import firebase from '@/firebase'
 
 Vue.use(VueRouter)
 
@@ -14,10 +14,13 @@ const router = new VueRouter({
 })
 
 // 檢查登入狀態
-router.beforeEach((to, form, next) => {
-  const user = firebase.auth().currentUser
-  if (to.name !== 'login' && user === null) next({ name: 'login' })
-  else next()
+router.beforeEach(async (to, from, next) => {
+  const loginStatus = window.localStorage.getItem('isLogin')
+  if (to.name !== 'login' && loginStatus === null) {
+    next({ name: 'login' })
+  } else {
+    next()
+  }
 })
 
 export default router

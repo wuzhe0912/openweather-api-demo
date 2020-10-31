@@ -16,7 +16,7 @@ const mutations = {
     state.userProfile = {
       uid: userProfile.uid,
       name: userProfile.displayName,
-      picture: userProfile.photoURL
+      avatar: userProfile.photoURL
     }
   },
   LOGOUT (state) {
@@ -60,11 +60,14 @@ const actions = {
       default:
         break
     }
+
+    window.localStorage.setItem('isLogin', store.state.isLogin)
   },
 
   async logout () {
     try {
       await firebase.auth().signOut()
+      window.localStorage.removeItem('isLogin')
     } catch (error) {
       console.log(error)
     }
