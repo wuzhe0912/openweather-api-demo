@@ -12,18 +12,24 @@
         v-avatar.ml-3(size="48")
           img(v-if="userProfile.avatar !== ''" :src="userProfile.avatar")
           v-icon(v-else) mdi-account-circle
-    v-main
+    v-main.channel__content
+      Messages
+      MessageForm
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import List from '@/components/List'
+import Messages from '@/components/Messages'
+import MessageForm from '@/components/MessageForm'
 
 export default {
-  name: 'Channel',
+  name: 'channel',
 
   components: {
-    List
+    List,
+    MessageForm,
+    Messages
   },
 
   computed: {
@@ -39,12 +45,7 @@ export default {
 
   data: () => ({
     drawer: null,
-    selectedItem: 1,
-    channelList: [
-      { text: 'Real-Time', icon: 'mdi-clock' },
-      { text: 'Audience', icon: 'mdi-account' },
-      { text: 'Conversions', icon: 'mdi-flag' }
-    ]
+    selectedItem: 1
   }),
 
   methods: {
@@ -66,5 +67,10 @@ export default {
   .v-toolbar__content {
     width: 100%;
   }
+}
+
+.channel__content {
+  position: relative;
+  height: 100vh;
 }
 </style>

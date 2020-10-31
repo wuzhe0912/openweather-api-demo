@@ -7,18 +7,24 @@
           v-icon mdi-plus
       v-list-group(:value='true' prepend-icon='mdi-flag')
         template(v-slot:activator='')
-          v-list-item-title Channels
-        v-list-item(v-for='item in channelList' :key='item.id' link='')
+          v-list-item-title 頻道
+        v-list-item(
+          v-for='(item, index) in channelList'
+          :key='item.id'
+          @click="changeItem(item, index)"
+          :class="{ 'light-blue lighten-5': index === selectedItem }"
+          link=''
+        )
           v-list-item-icon
             v-icon mdi-cog-outline
           v-list-item-title {{ item.name }}
-      v-list-group(:value='true' prepend-icon='mdi-account-circle')
-        template(v-slot:activator='')
-          v-list-item-title Users
-        v-list-item(v-for='([title, icon], i) in userList' :key='i' link='')
-          v-list-item-icon
-            v-icon(v-text='icon')
-          v-list-item-title(v-text='title')
+      //- v-list-group(:value='true' prepend-icon='mdi-account-circle')
+      //-   template(v-slot:activator='')
+      //-     v-list-item-title Users
+      //-   v-list-item(v-for='([title, icon], i) in userList' :key='i' link='')
+      //-     v-list-item-icon
+      //-       v-icon(v-text='icon')
+      //-     v-list-item-title(v-text='title')
 
     v-row(justify='center')
       v-dialog(v-model='dialog' persistent='' max-width='600px')
@@ -43,17 +49,15 @@
 import firebase from '@/firebase'
 
 export default {
-  name: 'List',
+  name: 'list',
 
   data: () => ({
     loading: false,
     dialog: false,
     channelList: [],
-    userList: [
-      ['Management', 'mdi-account-multiple-outline'],
-      ['Settings', 'mdi-cog-outline']
-    ],
+    selectedItem: 0,
     newChannelName: '',
+    isCurrentChannel: null,
     channelsRef: firebase.database().ref('channels')
   }),
 
@@ -94,8 +98,22 @@ export default {
     getChannelList () {
       this.channelsRef.on('child_added', snapshot => {
         this.channelList.push(snapshot.val())
+
+        // 設定使用者當前所在的頻道
+        if (this.channelList.length > 0) {
+          // 使用者進入頁面時，預設頻道
+          this.isCurrentChannel = this.channelList[0]
+          this.$store.dispatch('user/setCurrentChannel', this.isCurrentChannel)
+        }
       })
+    },
+
+    changeItem (item, index) {
+      this.selectedItem = index
+      this.$store.dispatch('user/setCurrentChannel', item)
     }
   }
 }
 </script>
+
+<style lang="scss"></style>

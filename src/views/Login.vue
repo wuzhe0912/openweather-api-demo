@@ -32,7 +32,7 @@ import { mapActions, mapGetters } from 'vuex'
 import firebase from '@/firebase'
 
 export default {
-  name: 'Login',
+  name: 'login',
 
   computed: {
     ...mapGetters('user', {

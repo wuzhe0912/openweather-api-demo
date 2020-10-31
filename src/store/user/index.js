@@ -2,12 +2,14 @@ import firebase from '@/firebase'
 
 const state = {
   userProfile: {},
-  isLogin: false
+  isLogin: false,
+  currentChannel: {}
 }
 
 const getters = {
   userProfile: ({ userProfile }) => userProfile,
-  isLogin: ({ isLogin }) => isLogin
+  isLogin: ({ isLogin }) => isLogin,
+  currentChannel: ({ currentChannel }) => currentChannel
 }
 
 const mutations = {
@@ -22,6 +24,9 @@ const mutations = {
   LOGOUT (state) {
     state.isLogin = false
     state.userProfile = {}
+  },
+  SET_CURRENT_CHANNEL (state, payload) {
+    state.currentChannel = payload
   }
 }
 
@@ -63,7 +68,6 @@ const actions = {
 
     window.localStorage.setItem('isLogin', store.state.isLogin)
   },
-
   async logout () {
     try {
       await firebase.auth().signOut()
@@ -71,11 +75,14 @@ const actions = {
     } catch (error) {
       console.log(error)
     }
+  },
+  setCurrentChannel ({ commit }, payload) {
+    commit('SET_CURRENT_CHANNEL', payload)
   }
 }
 
 export default {
-  namespaced: true,
+  namespaced: true, // vuex 語法結構化，可讀性更強
   state,
   getters,
   mutations,
