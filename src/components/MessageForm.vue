@@ -42,7 +42,18 @@ export default {
       }
 
       // 驗證，當使用者不在任何頻道時，不發送訊息
-      console.log(newMessage)
+      if (this.currentChannel !== null) {
+        // 訊息不為空
+        if (this.message.length > 0) {
+          this.messagesRef.child(this.currentChannel.id).push().set(newMessage)
+            .then(() => {})
+            .catch(error => {
+              if (error) console.log(this.error)
+            })
+            // initial message
+          this.message = ''
+        }
+      }
     }
   }
 }

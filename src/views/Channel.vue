@@ -1,17 +1,17 @@
 <template lang="pug">
   .channel__wrap
     v-navigation-drawer.pa-3(v-model="drawer" app)
-      .nav__info
+      .info__wrap.row.align-center.pl-4
+        v-avatar(size="48")
+          img(v-if="userProfile.avatar !== ''" :src="userProfile.avatar")
+          v-icon(v-else) mdi-account-circle
+        v-toolbar-title.primary--text.ml-4 {{ userProfile.name }}
+      .logout__btn.mt-4
         v-btn(@click="logout()" color="primary") Logout
       List
     v-app-bar.channel__header(app)
       .row.align-center
         v-app-bar-nav-icon(@click="drawer = !drawer")
-        v-toolbar-title Hello
-          span.ml-3.primary--text {{ userProfile.name }}
-        v-avatar.ml-3(size="48")
-          img(v-if="userProfile.avatar !== ''" :src="userProfile.avatar")
-          v-icon(v-else) mdi-account-circle
     v-main.channel__content
       Messages
       MessageForm
