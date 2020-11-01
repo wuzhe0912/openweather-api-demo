@@ -7,7 +7,7 @@
           v-icon(v-else) mdi-account-circle
         v-toolbar-title.primary--text.ml-4 {{ userProfile.name }}
       .logout__btn.mt-4
-        v-btn(@click="logout()" color="primary") Logout
+        v-btn(@click="logout(userProfile.uid)" color="primary") Logout
       List
     v-app-bar.channel__header(app)
       .row.align-center
@@ -22,6 +22,7 @@ import { mapGetters, mapActions } from 'vuex'
 import List from '@/components/List'
 import Messages from '@/components/Messages'
 import MessageForm from '@/components/MessageForm'
+import firebase from '@/firebase'
 
 export default {
   name: 'channel',
@@ -45,7 +46,8 @@ export default {
 
   data: () => ({
     drawer: null,
-    selectedItem: 1
+    selectedItem: 1,
+    presenceRef: firebase.database().ref('presence')
   }),
 
   methods: {

@@ -32,7 +32,12 @@
           v-avatar(size="28")
             img(v-if="userProfile.avatar !== ''" :src="item.avatar")
             v-icon(v-else) mdi-account-circle
-          v-list-item-title.ml-6 {{ item.name }}
+          v-list-item-title.ml-6(
+            :class="{'success-text': item.status === 'online', 'text--disabled': item.status === 'offline' }"
+          ) {{ item.name }}
+          v-icon(
+            :class="{'success-text': item.status === 'online', 'text--disabled': item.status === 'offline' }"
+          ) mdi-message-outline
 
     v-row(justify='center')
       v-dialog(v-model='dialog' persistent='' max-width='600px')
@@ -76,7 +81,9 @@ export default {
     newChannelName: '',
     isCurrentChannel: null,
     channelsRef: firebase.database().ref('channels'),
-    usersRef: firebase.database().ref('users')
+    usersRef: firebase.database().ref('users'),
+    connectedRef: firebase.database().ref('.info/connected'),
+    presenceRef: firebase.database().ref('presence')
   }),
 
   mounted () {
@@ -114,6 +121,15 @@ export default {
         })
     },
 
+    changeItem (value, item, index) {
+      if (value === 'channel') {
+        this.selectedChannel = index
+        this.$store.dispatch('user/setCurrentChannel', item)
+      } else {
+        this.selectedUser = index
+      }
+    },
+
     getChannelList () {
       this.channelsRef.on('child_added', snapshot => {
         this.channelList.push(snapshot.val())
@@ -125,15 +141,6 @@ export default {
           this.$store.dispatch('user/setCurrentChannel', this.isCurrentChannel)
         }
       })
-    },
-
-    changeItem (value, item, index) {
-      if (value === 'channel') {
-        this.selectedChannel = index
-        this.$store.dispatch('user/setCurrentChannel', item)
-      } else {
-        this.selectedUser = index
-      }
     },
 
     getUserList () {
@@ -150,6 +157,46 @@ export default {
           this.userList.push(user)
         }
       })
+
+      // 當有使用者登入時觸發
+      this.presenceRef.on('child_added', (snapshot) => {
+        // 找到其他目前處於登入狀態的註冊用戶
+        if (this.userProfile.uid !== snapshot.key) {
+          this.addStatusToUser(snapshot.key)
+        }
+      })
+
+      // 當有使用者登出時觸發
+      this.presenceRef.on('child_removed', snapshot => {
+        if (this.userProfile.uid !== snapshot.key) {
+          this.addStatusToUser(snapshot.key, false)
+        }
+      })
+
+      // 將已登入的使用者，塞入 true 狀態
+      this.connectedRef.on('value', (snapshot) => {
+        if (snapshot.val() === true) {
+          const ref = this.presenceRef.child(this.userProfile.uid)
+          ref.set(true)
+          ref.onDisconnect().remove()
+        }
+      })
+    },
+
+    // 設置註冊用戶 登入/登出 狀態
+    addStatusToUser (userId, connected = true) {
+      // 傳入目前處於登入狀態的使用者 uid，比對註冊用戶列表中是否有符合
+      const index = this.userList.findIndex(item => item.uid === userId)
+      // 若有符合的對象，則將狀態轉為 online
+      // 若全部不符合，則使用 default 值 offline
+      if (index !== -1) {
+        connected === true ? this.userList[index].status = 'online' : this.userList[index].status = 'offline'
+      }
+      console.log(this.userList)
+    },
+
+    checkOnline (value) {
+      console.log(value)
     }
   }
 }

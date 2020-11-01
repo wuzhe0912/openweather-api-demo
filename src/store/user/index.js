@@ -68,8 +68,9 @@ const actions = {
 
     window.localStorage.setItem('isLogin', store.state.isLogin)
   },
-  async logout () {
+  async logout (store, uid) {
     try {
+      await firebase.database().ref('presence').child(uid).remove()
       await firebase.auth().signOut()
       window.localStorage.removeItem('isLogin')
     } catch (error) {
