@@ -72,6 +72,7 @@ export default {
 }
 
 .channel__content {
+  overflow: hidden;
   position: relative;
   height: 100vh;
 }

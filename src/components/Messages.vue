@@ -55,7 +55,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .message__container {
-    display: flex;
+  .message__wrap {
+    overflow: scroll;
+    height: calc(100vh - 64px - 32px);
   }
 </style>

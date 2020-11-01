@@ -33,10 +33,10 @@
             img(v-if="userProfile.avatar !== ''" :src="item.avatar")
             v-icon(v-else) mdi-account-circle
           v-list-item-title.ml-6(
-            :class="{'success-text': item.status === 'online', 'text--disabled': item.status === 'offline' }"
+            :class="{'primary--text': item.status === 'online', 'text--disabled': item.status === 'offline' }"
           ) {{ item.name }}
           v-icon(
-            :class="{'success-text': item.status === 'online', 'text--disabled': item.status === 'offline' }"
+            :class="{'primary--text': item.status === 'online', 'text--disabled': item.status === 'offline' }"
           ) mdi-message-outline
 
     v-row(justify='center')
