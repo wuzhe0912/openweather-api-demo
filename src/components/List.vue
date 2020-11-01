@@ -192,11 +192,6 @@ export default {
       if (index !== -1) {
         connected === true ? this.userList[index].status = 'online' : this.userList[index].status = 'offline'
       }
-      console.log(this.userList)
-    },
-
-    checkOnline (value) {
-      console.log(value)
     }
   }
 }

@@ -6,7 +6,7 @@ module.exports = {
     config
       .plugin('html')
       .tap((args) => {
-        args[0].title = 'Vue Channel'
+        args[0].title = 'Chat'
         return args
       })
   }

@@ -1,29 +1,27 @@
 <template lang="pug">
   .wrap
-    v-app-bar.login__bar(app dark color="primary")
-      span.bar__title Vue Channel
-    v-main
+    v-main.mt-12
       v-container(v-if="isLogin === false")
-        .row.justify-center.ma-12
+        .row.justify-center.mb-8
           v-img(
-            alt="Vuetify Logo"
+            alt="Logo"
             class="shrink mr-2"
             contain
-            src="../assets/images/login-chat.png"
+            src="../assets/images/login-logo.svg"
             transition="scale-transition"
-            width="140"
+            width="260px"
           )
-        .row.justify-center.login__wrap(v-for="item in list")
-          v-btn.login__list(
+        .row.justify-center.animation-fade-in(v-for="item in list")
+          v-btn.mt-6.justify-start.white--text(
             :key="item.code"
             @click="login(item.code)"
-            color="primary"
+            color="blue darken-1"
+            width="200px"
           )
-            v-icon {{ item.icon }}
+            v-icon.mr-4 {{ item.icon }}
             span {{ item.name }}
-      v-container(v-else)
+      v-container.animation-fade-in(v-else)
         .row.justify-center.ma-12
-          div Welcome {{ userProfile.name }}
           v-btn.login__list(@click="checkLogin" color="primary") 返回 Channel
 </template>
 
@@ -47,9 +45,9 @@ export default {
 
   data: () => ({
     list: [
-      { code: 'google', icon: 'mdi-google', name: 'Google 登入' },
-      { code: 'github', icon: 'mdi-github', name: 'GitHub 登入' },
-      { code: 'twitter', icon: 'mdi-twitter', name: 'twitter 登入' }
+      { code: 'google', icon: 'mdi-google', name: 'Login Google' },
+      { code: 'github', icon: 'mdi-github', name: 'Login GitHub' },
+      { code: 'twitter', icon: 'mdi-twitter', name: 'Login twitter' }
     ],
     usersRef: firebase.database().ref('users')
   }),
@@ -79,6 +77,11 @@ export default {
 </script>
 
 <style lang="scss">
+  .wrap {
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(180deg, rgba(0, 136, 255, 1) 0%, rgba(0, 48, 90, 1) 100%);
+  }
   .login__bar {
     .v-toolbar__content {
       justify-content: center;
@@ -86,13 +89,5 @@ export default {
   }
   .bar__title {
     font-size: 28px;
-  }
-  .login__list {
-    margin-top: 12px;
-
-    span {
-      width: 140px;
-      text-align: right;
-    }
   }
 </style>

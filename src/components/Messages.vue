@@ -1,23 +1,30 @@
 <template lang="pug">
-  .message__wrap
-    v-list(three-line='')
-      template(v-for='(item, index) in message')
-        v-list-item(:key='item.timestamp')
-          v-list-item-avatar
-            v-img(:src='item.user.avatar')
-          v-list-item-content
-            v-list-item-title.primary--text {{ item.user.name }}
-              span.secondary--text.ml-2 - {{ item.timestamp | fromNow }}
-            v-list-item-subtitle {{ item.content }}
+  .message__wrp
+    .message__content.animation-fade-in
+      v-list(three-line='')
+        template(v-for='(item, index) in message')
+          v-list-item(:key='item.timestamp')
+            v-list-item-avatar
+              v-img(:src='item.user.avatar')
+            v-list-item-content
+              v-list-item-title.primary--text {{ item.user.name }}
+                span.secondary--text.ml-2 - {{ item.timestamp | fromNow }}
+              v-list-item-subtitle {{ item.content }}
+    MessageForm
 </template>
 
 <script>
 import firebase from '@/firebase'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
+import MessageForm from './MessageForm'
 
 export default {
   name: 'message',
+
+  components: {
+    MessageForm
+  },
 
   computed: {
     ...mapGetters('user', {
@@ -48,6 +55,11 @@ export default {
       this.message = [] // 若切換頻道則初始化訊息列表
       this.messagesRef.child(this.currentChannel.id).on('child_added', (snapshot) => {
         this.message.push(snapshot.val())
+        // 應用 $nextTick 的特性，等資料撈取完畢，再渲染 DOM
+        this.$nextTick(() => {
+          const container = this.$el.querySelector('.message__content')
+          container.scrollTop = container.scrollHeight
+        })
       })
     }
   }
@@ -55,8 +67,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .message__wrap {
-    overflow: scroll;
-    height: calc(100vh - 64px - 32px);
+  .message__content {
+    overflow-y: scroll;
+    height: calc(100vh - 64px - 48px);
+
+    .v-list-item__subtitle {
+      -webkit-line-clamp: initial;
+    }
   }
 </style>

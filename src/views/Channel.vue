@@ -14,14 +14,12 @@
         v-app-bar-nav-icon(@click="drawer = !drawer")
     v-main.channel__content
       Messages
-      MessageForm
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import List from '@/components/List'
 import Messages from '@/components/Messages'
-import MessageForm from '@/components/MessageForm'
 import firebase from '@/firebase'
 
 export default {
@@ -29,7 +27,6 @@ export default {
 
   components: {
     List,
-    MessageForm,
     Messages
   },
 

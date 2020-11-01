@@ -65,4 +65,10 @@ export default {
     position: absolute;
     bottom: 0;
   }
+
+  @media screen and (max-width: 768px) {
+    .message__form {
+      bottom: -8px;
+    }
+  }
 </style>
