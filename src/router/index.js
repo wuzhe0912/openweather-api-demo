@@ -6,6 +6,7 @@ import { routes } from './map'
 Vue.use(VueRouter)
 
 const router = new VueRouter({
+  mode: 'history',
   routes,
   // 頁面切換時，回到網頁頂部
   scrollBehavior (to, from, savedPosition) {
