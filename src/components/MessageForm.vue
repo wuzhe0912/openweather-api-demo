@@ -1,19 +1,26 @@
 <template lang="pug">
-  v-toolbar.message__form(dense='')
-    //- trim 自動過濾使用者首尾誤輸入的空白字符
-    v-text-field(v-model.trim="message" @keyup.enter="sendMessage()" hide-details='' single-line='')
-    v-btn(@click="sendMessage()" icon='')
-      v-icon(color="primary") mdi-send
-    v-btn(icon='')
-      v-icon(color="primary") mdi-cloud-upload
+  .form__wrap
+    v-toolbar.message__form(dense='')
+      //- trim 自動過濾使用者首尾誤輸入的空白字符
+      v-text-field(v-model.trim="message" @keyup.enter="sendMessage()" hide-details='' single-line='')
+      v-btn(@click="sendMessage()" icon='')
+        v-icon(color="primary") mdi-send
+      v-btn(@click="changeFileUploadModal()" icon='')
+        v-icon(color="primary") mdi-cloud-upload
+    FileUploadModal(:fileUpload="fileUpload" @cancleModal="changeFileUploadModal()")
 </template>
 
 <script>
 import firebase from '@/firebase'
 import { mapGetters } from 'vuex'
+import FileUploadModal from './FileUploadModal'
 
 export default {
   name: 'message-form',
+
+  components: {
+    FileUploadModal
+  },
 
   computed: {
     ...mapGetters('user', {
@@ -25,6 +32,7 @@ export default {
   data: () => ({
     message: '',
     errorText: [],
+    fileUpload: false,
     messagesRef: firebase.database().ref('messages')
   }),
 
@@ -54,6 +62,20 @@ export default {
           this.message = ''
         }
       }
+    },
+
+    uploadFile (file, metaData) {
+      if (file === null) {
+        return false
+      } else {
+        // 找到檔案要傳入的頻道 ID
+        // const uploadPath = this.currentChannel.id
+        // const ref = this.$parent.getMessagesRef()
+      }
+    },
+
+    changeFileUploadModal (file, metaData) {
+      this.fileUpload = !this.fileUpload
     }
   }
 }

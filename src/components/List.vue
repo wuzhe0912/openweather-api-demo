@@ -29,33 +29,40 @@
           :class="{ 'light-blue lighten-5': index === selectedUser }"
           link=''
         )
-          v-avatar(size="28")
-            img(v-if="userProfile.avatar !== ''" :src="item.avatar")
-            v-icon(v-else) mdi-account-circle
+          v-badge(
+            bordered
+            bottom
+            :color="checkUserLogingSataus(item.status)"
+            dot
+            offset-x="8"
+            offset-y="8"
+          )
+            v-avatar(size="28")
+              img(v-if="userProfile.avatar !== ''" :src="item.avatar")
+              v-icon(v-else) mdi-account-circle
           v-list-item-title.ml-6(
             :class="{'primary--text': item.status === 'online', 'text--disabled': item.status === 'offline' }"
           ) {{ item.name }}
           v-icon(
             :class="{'primary--text': item.status === 'online', 'text--disabled': item.status === 'offline' }"
           ) mdi-message-outline
-
-    v-row(justify='center')
-      v-dialog(v-model='dialog' persistent='' max-width='600px')
-        v-card
-          v-card-title
-            span.headline 創建頻道
-          v-card-text
-            v-container
-              v-row
-                v-col(cols='12')
-                  v-text-field(v-model='newChannelName' label='Channel*' required='')
-            small *indicates required field
-          v-card-actions
-            v-spacer
-            v-btn(color='blue darken-1' text='' @click='dialog = false')
-              | Close
-            v-btn(color='blue darken-1' text='' @click='addChannel()')
-              | Create
+    //- 創建頻道 Modal
+    v-dialog(v-model='dialog' persistent='' max-width='600px')
+      v-card
+        v-card-title
+          span.headline 創建頻道
+        v-card-text
+          v-container
+            v-row
+              v-col(cols='12')
+                v-text-field(v-model='newChannelName' label='Channel*' required='')
+          small *indicates required field
+        v-card-actions
+          v-spacer
+          v-btn(color='blue darken-1' text='' @click='dialog = false')
+            | Close
+          v-btn(color='blue darken-1' text='' @click='addChannel()')
+            | Create
 </template>
 
 <script>
@@ -80,6 +87,7 @@ export default {
     selectedUser: 0,
     newChannelName: '',
     isCurrentChannel: null,
+    userLogingSataus: 'red',
     channelsRef: firebase.database().ref('channels'),
     usersRef: firebase.database().ref('users'),
     connectedRef: firebase.database().ref('.info/connected'),
@@ -127,6 +135,7 @@ export default {
         this.$store.dispatch('user/setCurrentChannel', item)
       } else {
         this.selectedUser = index
+        this.personalChannel(item.uid)
       }
     },
 
@@ -192,7 +201,21 @@ export default {
       if (index !== -1) {
         connected === true ? this.userList[index].status = 'online' : this.userList[index].status = 'offline'
       }
+    },
+
+    checkUserLogingSataus (value) {
+      if (value === 'online') {
+        return 'green darken-1'
+      } else return 'red darken-1'
+    },
+
+    personalChannel (uid) {
+      // this.getChannelId(uid)
     }
+
+    // getChannelId (uid) {
+    //   return uid < this.userProfile.uid ? uid + '/' + this.userProfile.uid : this.userProfile.uid + '/' + uid
+    // }
   }
 }
 </script>
