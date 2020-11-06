@@ -12,6 +12,7 @@
     v-app-bar.channel__header(app)
       .row.align-center
         v-app-bar-nav-icon(@click="drawer = !drawer")
+        h2.channel__name.primary--text.ml-4 {{ channelName }}
     v-main.channel__content
       Messages
 </template>
@@ -33,17 +34,29 @@ export default {
   computed: {
     ...mapGetters('user', {
       userProfile: 'userProfile',
-      isLogin: 'isLogin'
-    })
+      isLogin: 'isLogin',
+      currentChannel: 'currentChannel',
+      isPrivate: 'isPrivate'
+    }),
+
+    channelName () {
+      if (this.channel !== null) {
+        return this.isPrivate ? '@ ' + this.channel.name : '# ' + this.channel.name
+      } else return ''
+    }
   },
 
   watch: {
-    isLogin: 'checkLogin'
+    isLogin: 'checkLogin',
+    currentChannel: function () {
+      this.channel = this.currentChannel
+    }
   },
 
   data: () => ({
     drawer: null,
     selectedItem: 1,
+    channel: null,
     presenceRef: firebase.database().ref('presence')
   }),
 

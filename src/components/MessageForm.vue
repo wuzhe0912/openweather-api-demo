@@ -32,8 +32,7 @@ export default {
   data: () => ({
     message: '',
     errorText: [],
-    fileUpload: false,
-    messagesRef: firebase.database().ref('messages')
+    fileUpload: false
   }),
 
   methods: {
@@ -53,8 +52,9 @@ export default {
       if (this.currentChannel !== null) {
         // 訊息不為空
         if (this.message.length > 0) {
-          this.messagesRef.child(this.currentChannel.id).push().set(newMessage)
-            .then(() => {})
+          this.$parent.getMessagesRef().child(this.currentChannel.id).push().set(newMessage)
+            .then(() => {
+            })
             .catch(error => {
               if (error) console.log(this.error)
             })

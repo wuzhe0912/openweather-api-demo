@@ -28,13 +28,16 @@ export default {
 
   computed: {
     ...mapGetters('user', {
-      currentChannel: 'currentChannel'
+      currentChannel: 'currentChannel',
+      userProfile: 'userProfile',
+      isPrivate: 'isPrivate'
     })
   },
 
   data: () => ({
     message: [],
-    messagesRef: firebase.database().ref('messages')
+    messagesRef: firebase.database().ref('messages'),
+    privateMessagesRef: firebase.database().ref('privateMessages')
   }),
 
   // 監聽當前頻道訊息變化，若有輸入訊息，則重新呼叫函式檢查資料庫內容
@@ -51,10 +54,21 @@ export default {
   },
 
   methods: {
+    // 判斷是進入公共頻道或是私人聊天
+    getMessagesRef () {
+      if (this.isPrivate) {
+        return this.privateMessagesRef
+      } else return this.messagesRef
+    },
+
     getMessageList () {
+      const ref = this.getMessagesRef()
       this.message = [] // 若切換頻道則初始化訊息列表
-      this.messagesRef.child(this.currentChannel.id).on('child_added', (snapshot) => {
-        this.message.push(snapshot.val())
+      ref.child(this.currentChannel.id).on('child_added', (snapshot) => {
+        const message = snapshot.val()
+        // eslint-disable-next-line
+        message['id'] = snapshot.key
+        this.message.push(message)
         // 應用 $nextTick 的特性，等資料撈取完畢，再渲染 DOM
         this.$nextTick(() => {
           const container = this.$el.querySelector('.message__content')

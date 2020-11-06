@@ -3,13 +3,15 @@ import firebase from '@/firebase'
 const state = {
   userProfile: {},
   isLogin: false,
-  currentChannel: {}
+  currentChannel: {},
+  isPrivate: false
 }
 
 const getters = {
   userProfile: ({ userProfile }) => userProfile,
   isLogin: ({ isLogin }) => isLogin,
-  currentChannel: ({ currentChannel }) => currentChannel
+  currentChannel: ({ currentChannel }) => currentChannel,
+  isPrivate: ({ isPrivate }) => isPrivate
 }
 
 const mutations = {
@@ -27,6 +29,9 @@ const mutations = {
   },
   SET_CURRENT_CHANNEL (state, payload) {
     state.currentChannel = payload
+  },
+  SET_PRIVATE (state, payload) {
+    state.isPrivate = payload
   }
 }
 
@@ -79,6 +84,9 @@ const actions = {
   },
   setCurrentChannel ({ commit }, payload) {
     commit('SET_CURRENT_CHANNEL', payload)
+  },
+  setPrivate ({ commit }, payload) {
+    commit('SET_PRIVATE', payload)
   }
 }
 

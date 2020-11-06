@@ -132,10 +132,11 @@ export default {
     changeItem (value, item, index) {
       if (value === 'channel') {
         this.selectedChannel = index
+        this.$store.dispatch('user/setPrivate', false)
         this.$store.dispatch('user/setCurrentChannel', item)
       } else {
         this.selectedUser = index
-        this.personalChannel(item.uid)
+        this.createPersonalChannel(item.uid, item.name)
       }
     },
 
@@ -147,6 +148,7 @@ export default {
         if (this.channelList.length > 0) {
           // 使用者進入頁面時，預設頻道
           this.isCurrentChannel = this.channelList[0]
+          this.$store.dispatch('user/setPrivate', false)
           this.$store.dispatch('user/setCurrentChannel', this.isCurrentChannel)
         }
       })
@@ -209,13 +211,22 @@ export default {
       } else return 'red darken-1'
     },
 
-    personalChannel (uid) {
-      // this.getChannelId(uid)
-    }
+    createPersonalChannel (uid, name) {
+      const personalChannelID = this.getChannelId(uid)
+      const personalChannel = {
+        id: personalChannelID,
+        name: name
+      }
+      this.$store.dispatch('user/setPrivate', true)
+      // one to one chat ID use => loginID/clickUserID
+      this.$store.dispatch('user/setCurrentChannel', personalChannel)
+    },
 
-    // getChannelId (uid) {
-    //   return uid < this.userProfile.uid ? uid + '/' + this.userProfile.uid : this.userProfile.uid + '/' + uid
-    // }
+    getChannelId (uid) {
+      // uid => 點擊到的註冊用戶
+      // 預設格式 => 登入用戶ID/點擊的用戶ID
+      return uid < this.userProfile.uid ? uid + '/' + this.userProfile.uid : this.userProfile.uid + '/' + uid
+    }
   }
 }
 </script>
